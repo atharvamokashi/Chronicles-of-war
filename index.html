@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chronicle of Wars</title>
+<link rel="stylesheet" href="styles.css"></head><body>
+<div id="bg"></div>
+<header><h1>Chronicle of Wars</h1><p>An atlas of history’s conflicts</p></header>
+<main>
+<section id="home">
+ <div class="hero">
+  <div class="crest">⚔</div>
+  <h1>Chronicle of Wars</h1>
+  <div class="rule"><span>◆</span></div>
+  <p class="tag">An atlas of history’s conflicts. Explore battles on a world map by country, continent and century, with victors, casualties, equipment and causes.</p>
+  <button class="cta" onclick="go('battles')">Explore the battles →</button>
+ </div>
+ <div class="stats">
+  <div class="stat"><b id="stb">–</b><span>Battles &amp; campaigns</span></div>
+  <div class="stat"><b id="stc">–</b><span>Countries</span></div>
+  <div class="stat"><b id="sty" style="font-size:1.25rem;padding:.25em 0">–</b><span>Years covered</span></div>
+ </div>
+ <div class="feat">
+  <button class="fcard main" onclick="go('battles')">
+   <div class="ic">⚔</div>
+   <div class="mt"><h2>Battles</h2><p>Browse conflicts from antiquity to the twentieth century. Pick a country, continent or century and watch the map show where the fighting happened.</p>
+   <div class="chips"><span>World map</span><span>Country &amp; continent</span><span>100-year ranges</span><span>Casualty ranking</span><span>Wikipedia links</span></div></div>
+   <span class="go">Open the atlas →</span>
+  </button>
+  <div class="fcard soon"><div class="ic">🛡</div><h2>Coming soon</h2><p>Space reserved for a future section.</p></div>
+  <div class="fcard soon"><div class="ic">📜</div><h2>Coming soon</h2><p>Space reserved for a future section.</p></div>
+  <div class="fcard soon"><div class="ic">🧭</div><h2>Coming soon</h2><p>Space reserved for a future section.</p></div>
+ </div>
+ <p class="foot">A growing, curated atlas. Casualty figures are historians’ estimates and differ between sources.</p>
+</section>
+<section id="battles" class="hide">
+ <button class="btn back" onclick="go('')">← Home</button>
+ <div class="bar">
+  <label>Country (type, pick or click map)<input id="cs" list="cl" placeholder="All countries" autocomplete="off"></label>
+  <datalist id="cl"></datalist>
+  <label>Continent<select id="ct"><option value="">All continents</option><option>Africa</option><option>Asia</option><option>Europe</option><option>North America</option><option>Oceania</option><option>South America</option></select></label>
+  <label>Century (100-year range)<select id="cp"></select></label>
+  <label>Year in this century<input type="number" id="yi" placeholder="e.g. 1450"><span class="err" id="ye"></span></label>
+  <button class="btn" id="rs">Reset</button>
+ </div>
+ <div class="map"><div id="map"></div><div class="zc"><button class="btn" id="zi" title="Zoom in">+</button><button class="btn" id="zo" title="Zoom out">−</button></div></div>
+ <div id="status"></div>
+ <div class="cards" id="cards"></div>
+ <p class="note">Dataset: a curated starter set of notable battles. Casualty figures are historians’ estimates and vary by source. Each country has its own dataset in the <code>DATA</code> block of the page source.</p>
+</section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+<script src="data-ancient-and-medieval.js"></script>
+<script src="data-world-war-2-and-asia.js"></script>
+<script src="data-napoleonic-and-american-revolution.js"></script>
+<script src="app.js"></script></body></html>
