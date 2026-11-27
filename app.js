@@ -1,4 +1,70 @@
 const B=[];Object.keys(DATA).forEach(c=>DATA[c].forEach(o=>B.push([o.name,o.year,o.end||0,c,o.lon,o.lat,o.victor,o.nations,o.casualties,o.equipment,o.reason,o.place,0,o.cas||0,o.when||'',o.note||''])));
+// ---- Era backgrounds: weapons and technology of each period (drawn as inline SVG) ----
+const K='#2a1c14';
+const ERAS=[[500,'ancient'],[1000,'early'],[1300,'high'],[1499,'late'],[1799,'gun'],[1899,'rifle'],[1e9,'modern']];
+function eraOf(y){for(const e of ERAS)if(y<=e[0])return e[1];return 'modern'}
+function sv(inner,sky){return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMax slice">'+(sky?'<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+sky[0]+'"/><stop offset="1" stop-color="'+sky[1]+'"/></linearGradient></defs><rect width="1200" height="600" fill="url(#g)"/>':'')+inner+'</svg>'}
+function L(x1,y1,x2,y2,w,c){return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+(c||K)+'" stroke-width="'+(w||3)+'" stroke-linecap="round"/>'}
+function Ci(x,y,r,f,st){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="'+f+'"'+(st?' stroke="'+K+'" stroke-width="'+st+'"':'')+'/>'}
+function Rc(x,y,w,h,f,r){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" fill="'+f+'"'+(r?' rx="'+r+'"':'')+'/>'}
+function Pa(d,f,st){return '<path d="'+d+'" fill="'+f+'"'+(st?' stroke="'+K+'" stroke-width="'+st+'"':'')+'/>'}
+function Sm(x,y,r){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#8d8d8d" opacity=".5"/>'}
+function Sun(x,y,r){return '<circle cx="'+x+'" cy="'+y+'" r="'+r+'" fill="#f6e2b3" opacity=".8"/>'}
+const GROUND=Rc(0,520,1200,80,K);
+// 500 BCE - 500 CE: phalanx spears, hoplite shields, legion shields and standards (drawn over the legion picture)
+function sAncient(){let s=GROUND;
+ for(let i=0;i<40;i++){const x=15+i*30,h=(i*47)%50;
+  s+=L(x,120+h,x+12,520,3)+Pa('M'+(x-4)+' '+(132+h)+'L'+x+' '+(104+h)+'L'+(x+4)+' '+(132+h)+'Z',K)+Ci(x+4,488,21,i%2?'#8a3a1f':'#a8872e',3)+Pa('M'+(x-9)+' 462a13 13 0 0 1 26 0z',K)}
+ for(let k=0;k<4;k++){const x=150+k*300;s+=L(x,200,x,520,4)+Rc(x-18,235,36,26,'#a32a1f')+Ci(x,214,9,'#e0b64a',2)+Pa('M'+(x-26)+' 212q26-26 52 0q-26-6-52 0z','#e0b64a')}
+ return sv(s)}
+// 500 - 1000: shield wall, spears, swords, pennants
+function sEarly(){let s=Sun(950,140,55)+GROUND;
+ for(let i=0;i<22;i++){const x=30+i*55,h=(i*29)%60;s+=L(x+10,170+h,x+22,520,3)+Pa('M'+(x+4)+' '+(190+h)+'L'+(x+10)+' '+(160+h)+'L'+(x+16)+' '+(190+h)+'Z',K)}
+ for(let i=0;i<22;i++){const x=30+i*55;s+=Ci(x+25,480,34,['#8a3a1f','#c9a227','#2f5d8a','#e8dcc0'][i%4],3)+Ci(x+25,480,9,'#6b6b6b',2)}
+ for(let k=0;k<5;k++){const x=110+k*240;s+=L(x,430,x+30,290,6)+L(x,430,x+30,290,3,'#d9d4c7')+L(x-12,408,x+18,400,5)+L(x+200,440,x+200,250,3)+Pa('M'+(x+200)+' 252l60 14-60 26z',['#a32a1f','#2f5d8a'][k%2])}
+ return sv(s,['#e9b878','#f7e7c4'])}
+// 1000 - 1300: castle, mounted knights with lances and kite shields
+function sHigh(){let s=Sun(200,130,50)+GROUND+Rc(820,250,120,250,K)+Rc(960,300,100,200,K)+Rc(1080,230,90,270,K)+Rc(880,200,60,60,K);
+ for(let i=0;i<5;i++)s+=Rc(820+i*26,236,14,16,K);for(let i=0;i<4;i++)s+=Rc(1080+i*24,216,12,16,K);
+ s+=L(1125,230,1125,150,3)+Pa('M1125 150l50 14-50 14z','#a32a1f');
+ for(let k=0;k<4;k++){const x=120+k*190;
+  s+='<ellipse cx="'+x+'" cy="450" rx="62" ry="28" fill="'+K+'"/>'+L(x-40,470,x-48,520,7)+L(x-14,470,x-12,520,7)+L(x+22,470,x+30,520,7)+L(x+48,470,x+60,515,7)+Pa('M'+(x+45)+' 440l22-45 22 12-14 40z',K)+Rc(x-9,375,18,58,K,4)+Ci(x,364,11,K)+L(x+8,400,x+160,372,5)+Pa('M'+(x+160)+' 372l-4-12 40 14-40 10z','#a32a1f')+Pa('M'+(x-16)+' 385l16-6v34l-8 12-8-12z','#c9a227',2)}
+ return sv(s,['#eebd7e','#fbeacc'])}
+// 1300 - 1500: longbow volleys, bombard cannon, pikes, castle walls
+function sLate(){let s=Sun(1000,120,50)+GROUND;
+ for(let i=0;i<46;i++){const x0=60+(i*23)%420,x1=x0+300+(i*37)%380,pk=70+(i*41)%120;s+='<path d="M'+x0+' 470Q'+((x0+x1)/2)+' '+pk+' '+x1+' 500" fill="none" stroke="'+K+'" stroke-width="1.6" opacity=".7"/>'}
+ for(let i=0;i<12;i++){const x=50+i*40;s+=Rc(x,440,14,62,K,3)+Ci(x+7,430,9,K)+'<path d="M'+(x+16)+' 410q24 34 0 70" fill="none" stroke="'+K+'" stroke-width="3"/>'+L(x+16,410,x+16,480,1.5)}
+ s+=Rc(560,455,170,22,K,8)+Rc(540,470,230,14,'#6b4a2b')+Ci(590,505,24,K)+Ci(700,505,24,K)+Ci(590,505,8,'#d8c8a0')+Ci(700,505,8,'#d8c8a0')+Sm(745,440,16)+Sm(770,415,22)+Sm(805,385,28);
+ s+=Rc(880,330,320,190,K);for(let i=0;i<10;i++)s+=Rc(880+i*34,314,20,18,K);s+=Rc(1100,250,90,270,K);
+ for(let i=0;i<9;i++){const x=790+i*10;s+=L(x,170,x+2,500,2)}
+ return sv(s,['#dba46b','#f4e2bd'])}
+// 1500 - 1800: muskets with bayonets, cannons, smoke, flags
+function lineSoldiers(hat,rifleLen,bayonet){let s='';for(let i=0;i<26;i++){const x=20+i*46;s+=Rc(x,445,16,58,K,3)+Ci(x+8,434,9,K)+hat(x)+L(x+18,470,x+24,470-rifleLen,3)+(bayonet?Pa('M'+(x+21)+' '+(478-rifleLen)+'l3-24 3 24z',K):'')}return s}
+function cannon(x){return '<g transform="rotate(-8 '+x+' 480)">'+Rc(x-10,468,140,26,K,12)+'</g>'+Ci(x+20,508,28,K)+Ci(x+20,508,10,'#d8c8a0')+L(x+20,480,x+20,536,2,'#d8c8a0')+L(x-8,508,x+48,508,2,'#d8c8a0')}
+function sGun(){let s=GROUND;for(let i=0;i<5;i++)s+=Sm(300+i*40,430-i*30,26+i*8);
+ s+=lineSoldiers(x=>Pa('M'+(x-6)+' 432l14-18 14 18z',K),120,true)+cannon(260)+cannon(820);
+ for(let f=0;f<3;f++){const x=200+f*400;s+=L(x,420,x,200,4)+Pa('M'+x+' 205l90 16-90 30z',['#a32a1f','#2f5d8a','#e8dcc0'][f],2)}
+ return sv(s,['#9db0c4','#e7dcc4'])}
+// 1800 - 1900: rifles, shakos, cavalry sabres, field artillery
+function sRifle(){let s=GROUND;for(let i=0;i<5;i++)s+=Sm(150+i*45,430-i*28,26+i*8);
+ s+=lineSoldiers(x=>Rc(x-1,414,18,18,K),140,false)+cannon(520);
+ for(let k=0;k<3;k++){const x=720+k*150;s+='<ellipse cx="'+x+'" cy="455" rx="52" ry="24" fill="'+K+'"/>'+L(x-34,472,x-42,520,6)+L(x+30,472,x+40,520,6)+Pa('M'+(x+38)+' 445l18-38 18 10-10 34z',K)+Rc(x-8,385,16,52,K,4)+Ci(x,374,10,K)+'<path d="M'+(x+8)+' 400q60-70 90-60" fill="none" stroke="#d9d4c7" stroke-width="4"/>'}
+ return sv(s,['#b9a98b','#efe3c9'])}
+// 1900 - 2000+: tanks, fighter jets, bombers, helmeted infantry
+function tank(x,y,sc){return '<g transform="translate('+x+' '+y+') scale('+sc+')">'+Rc(-70,-22,140,24,K,6)+'<rect x="-82" y="-4" width="164" height="34" rx="17" fill="'+K+'"/>'+[-58,-29,0,29,58].map(a=>Ci(a,13,10,'#d8c8a0')).join('')+Rc(-34,-48,66,28,K,8)+Rc(20,-40,90,8,K,3)+'</g>'}
+function jet(x,y,sc,fl){return '<g transform="translate('+x+' '+y+') scale('+(fl?-sc:sc)+' '+sc+')">'+Pa('M-60 0L40 -6L70 0L40 6Z',K)+Pa('M-6 0L-34 -38L-18 -38L22 0Z',K)+Pa('M-6 0L-34 38L-18 38L22 0Z',K)+Pa('M-56 0L-72 -18L-62 -18L-44 0Z',K)+'</g>'}
+function bomber(x,y,sc){return '<g transform="translate('+x+' '+y+') scale('+sc+')"><ellipse cx="0" cy="0" rx="100" ry="9" fill="'+K+'"/>'+Rc(-14,-86,28,172,K,6)+Rc(-96,-28,18,56,K,4)+[-60,-34,34,60].map(a=>'<ellipse cx="8" cy="'+a+'" rx="16" ry="5" fill="'+K+'"/>').join('')+'</g>'}
+function sModern(){let s=GROUND;
+ for(let i=0;i<4;i++)s+='<ellipse cx="'+(120+i*300)+'" cy="480" rx="30" ry="14" fill="#6f6f6f" opacity=".45"/>'+Sm(130+i*300,420-i*10,30)+Sm(150+i*300,370-i*10,38);
+ s+=tank(250,500,1.15)+tank(640,500,1.3)+tank(1010,500,1.05)+jet(300,150,1.1)+jet(720,105,.9)+jet(1000,210,1,true)+jet(520,240,.7)+bomber(860,60,.7);
+ for(let i=0;i<16;i++){const x=40+i*72;s+=Rc(x,462,12,40,K,3)+'<path d="M'+(x-2)+' 458a8 8 0 0 1 16 0z" fill="'+K+'"/>'+L(x+12,478,x+30,456,3)}
+ return sv(s,['#8fa5b8','#d9dfe2'])}
+const SCENES={early:sEarly,high:sHigh,late:sLate,gun:sGun,rifle:sRifle,modern:sModern};
+const _eraCache={};
+function eraUri(svg){return 'url("data:image/svg+xml,'+encodeURIComponent(svg)+'")'}
+function setEra(b){const e=eraOf(b[1]);
+ if(!_eraCache[e])_eraCache[e]=e==='ancient'?eraUri(sAncient())+', var(--legion)':eraUri(SCENES[e]());
+ const bg=document.getElementById('bg');bg.style.backgroundImage=_eraCache[e];bg.style.backgroundPosition='center bottom';bg.classList.add('on')}
 const $=id=>document.getElementById(id),cs=$('cs'),ct=$('ct'),cp=$('cp'),yi=$('yi');
 const fy=y=>y<0?-y+' BCE':y+' CE';
 const yrs=b=>b[14]||(b[2]?fy(b[1])+' – '+fy(b[2]):fy(b[1]));
@@ -35,7 +101,7 @@ function sizesFor(z){const px=(chart?chart.getWidth():800)/360*z;return HITS.map
 function resizeDots(){if(!chart)return;const g=chart.getOption().geo[0];SZ=sizesFor(g.zoom||1);chart.setOption({series:(KOK?[{},{symbolSize:symFn}]:[{},{},{symbolSize:symFn}])})}
 function ensure(){if(chart||!ok)return;chart=echarts.init($('map'));try{chart.setOption({geo:{map:MAPN}});KOK=MAPN==='world2'&&!!chart.getModel().getComponent('geo').coordinateSystem.getRegion(KN)}catch(e){KOK=false}if(!KOK&&MAPN!=='world'){MAPN='world';chart.setOption({geo:{map:'world'}})}chart.on('georoam',resizeDots);
  chart.on('click',p=>{
-  if(p.componentType==='series'&&p.data&&p.data.bi!==undefined){let k=$('b'+p.data.bi);if(!k&&inWar){selWar=warOf(B[p.data.bi]);mapWar=selWar;render();k=$('b'+p.data.bi)}if(k){const box=$('cards');box.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));box.prepend(k);k.classList.add('on');box.scrollIntoView({behavior:'smooth',block:'start'})}return}
+  if(p.componentType==='series'&&p.data&&p.data.bi!==undefined){setEra(B[p.data.bi]);let k=$('b'+p.data.bi);if(!k&&inWar){selWar=warOf(B[p.data.bi]);mapWar=selWar;render();k=$('b'+p.data.bi)}if(k){const box=$('cards');box.querySelectorAll('.on').forEach(x=>x.classList.remove('on'));box.prepend(k);k.classList.add('on');box.scrollIntoView({behavior:'smooth',block:'start'})}return}
   const n=p.seriesType==='custom'?INDIA:(p.componentType==='geo'?(p.name===KN?INDIA:p.name):null);
   if(n){cs.value=n;setContinent(n);render()}})}
 function regionBox(r){
@@ -69,11 +135,10 @@ function render(){
  const c=pick(),y=getRange();$('ye').textContent='';
  if(y==='bad'||y==='none'){const a=+cp.value;$('ye').textContent='Invalid input';$('status').textContent=y==='none'?'Invalid input: select a century first.':'Invalid input: the year must be between '+lab(a)+' and '+lab(a+100)+'.';$('cards').innerHTML='';$('bg').classList.remove('on');draw(c||'',[],[]);return}
  if(c===null){$('status').textContent='No country matches “'+cs.value+'”. Pick one from the list.';return}
- const rome=y!==null&&((norm(c)==='france'&&y[0]<=476&&y[1]>=-50)||(norm(c)==='italy'&&y[0]<=476&&y[1]>=-200));$('bg').classList.toggle('on',rome);
  const scope=B.filter(b=>(!c||b[3]===c)&&(c||!ct.value||b[12]===ct.value));
  const idle=!c&&!ct.value&&y===null;let list=idle?[]:scope.filter(b=>y===null||(b[1]<=y[1]&&(b[2]||b[1])>=y[0])).sort((a,b)=>a[1]-b[1]);let hits=(c&&y===null)?list.slice().sort((a,b)=>b[13]-a[13]).slice(0,TOP):list;
  const warMode=!idle&&y!==null&&y[0]!==y[1];inWar=warMode;
- const key=[c,ct.value,cp.value,yi.value].join('|');if(key!==wkey){selWar='';mapWar='';wkey=key}
+ const key=[c,ct.value,cp.value,yi.value].join('|');if(key!==wkey){selWar='';mapWar='';wkey=key;$('bg').classList.remove('on')}
  let groups=null;
  if(warMode){groups={};list.forEach(b=>{const w=warOf(b);(groups[w]=groups[w]||[]).push(b)});if(selWar&&groups[selWar]){list=groups[selWar];mapWar=selWar}else{selWar='';mapWar=''}hits=list}
  $('status').textContent=idle?'Select a country, continent or year to see battles.':(list.length?list.length+' battle'+(list.length>1?'s':''):'No battles in the dataset')+' · '+(c||ct.value||'all countries')+' · '+(y===null?'all time':y[0]===y[1]?lab(y[0]):lab(y[0])+' – '+lab(y[1]))+(c&&y===null?' · map marks the top '+TOP+' by casualties':'');
@@ -91,7 +156,7 @@ function warOf(b){if(b[16]!==undefined)return b[16];let w=WO[b[0]]||'';
  if(!w)w=b[0];w=w.charAt(0).toUpperCase()+w.slice(1);b[16]=w;return w}
 function warCards(g){return Object.keys(g).sort((a,b)=>g[a][0][1]-g[b][0][1]).map(k=>{const L=g[k],y0=Math.min(...L.map(b=>b[1])),y1=Math.max(...L.map(b=>b[2]||b[1]));return '<button class="wcard" data-w="'+encodeURIComponent(k)+'"><h3>'+k+'</h3><small>'+L.length+' battle'+(L.length>1?'s':'')+' · '+(y0===y1?lab(y0):lab(y0)+' – '+lab(y1))+'</small></button>'}).join('')}
 $('cards').addEventListener('click',e=>{const t=e.target.closest('[data-w]');if(t){selWar=decodeURIComponent(t.dataset.w);mapWar=selWar;render();$('cards').scrollIntoView({behavior:'smooth',block:'start'});return}if(e.target.closest('#wback')){selWar='';mapWar='';render()}});
-$('cards').addEventListener('click',e=>{const a=e.target.closest('.bc');if(!a||e.target.closest('a'))return;const w=warOf(B[+a.id.slice(1)]);mapWar=mapWar===w?'':w;render();const el=$(a.id);if(el)el.classList.add('on')});
+$('cards').addEventListener('click',e=>{const a=e.target.closest('.bc');if(!a||e.target.closest('a'))return;setEra(B[+a.id.slice(1)]);const w=warOf(B[+a.id.slice(1)]);mapWar=mapWar===w?'':w;render();const el=$(a.id);if(el)el.classList.add('on')});
 function setContinent(c){if(!c)return;const cnt={};B.forEach(b=>{if(b[3]===c)cnt[b[12]]=(cnt[b[12]]||0)+1});let best=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a])[0];
  if(!best){try{ensure();const bb=chart.getModel().getComponent('geo').coordinateSystem.getRegion(c).getBoundingRect(),cx=bb.x+bb.width/2,cy=bb.y+bb.height/2;let d=1e9;for(const k in CV){const v=Math.hypot(cx-CV[k][0][0],cy-CV[k][0][1]);if(v<d){d=v;best=k}}}catch(e){}}
  if(best)ct.value=best}
